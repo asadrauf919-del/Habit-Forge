@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Habit Forge</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .section { margin-bottom: 30px; }
+        input, textarea, button { margin: 5px; padding: 8px; }
+        .task { margin: 5px 0; }
+        .timer { font-size: 24px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Habit Forge</h1>
+
+    <!-- To-Do List -->
+    <div class="section">
+        <h2>To-Do List</h2>
+        <input id="taskInput" placeholder="New task">
+        <button onclick="addTask()">Add</button>
+        <div id="taskList"></div>
+    </div>
+
+    <!-- Pomodoro Timer -->
+    <div class="section">
+        <h2>Pomodoro Timer</h2>
+        <button onclick="startPomodoro()">Start 25 min</button>
+        <div id="pomodoro" class="timer">00:00</div>
+    </div>
+
+    <!-- Habit Stacking -->
+    <div class="section">
+        <h2>Habit Stacking</h2>
+        <textarea id="habitStack" placeholder="Write habits to stack..."></textarea>
+        <button onclick="saveHabitStack()">Save</button>
+        <div id="habitOutput"></div>
+    </div>
+
+    <!-- Goal Writing -->
+    <div class="section">
+        <h2>Goals</h2>
+        <textarea id="goalInput" placeholder="Write your goals..."></textarea>
+        <button onclick="saveGoal()">Save</button>
+        <div id="goalOutput"></div>
+    </div>
+
+    <!-- Scheduling -->
+    <div class="section">
+        <h2>Schedule</h2>
+        <input type="date" id="scheduleDate">
+        <input type="text" id="scheduleTask" placeholder="Task">
+        <button onclick="addSchedule()">Add</button>
+        <div id="scheduleList"></div>
+    </div>
+
+    <script>
+        // To-Do List
+        function addTask() {
+            let task = document.getElementById("taskInput").value;
+            if(task) {
+                let div = document.createElement("div");
+                div.className = "task";
+                div.innerHTML = task + " <button onclick='this.parentElement.remove()'>Done</button>";
+                document.getElementById("taskList").appendChild(div);
+                document.getElementById("taskInput").value = "";
+            }
+        }
+
+        // Pomodoro Timer
+        let timer;
+        function startPomodoro() {
+            clearInterval(timer);
+            let time = 25 * 60;
+            timer = setInterval(() => {
+                let minutes = Math.floor(time / 60);
+                let seconds = time % 60;
+                document.getElementById("pomodoro").innerText = 
+                    `${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+                time--;
+                if(time < 0) clearInterval(timer);
+            }, 1000);
+        }
+
+        // Habit Stacking
+        function saveHabitStack() {
+            let habits = document.getElementById("habitStack").value;
+            document.getElementById("habitOutput").innerText = "Stacked Habits:\n" + habits;
+        }
+
+        // Goals
+        function saveGoal() {
+            let goals = document.getElementById("goalInput").value;
+            document.getElementById("goalOutput").innerText = "Goals:\n" + goals;
+        }
+
+        // Scheduling
+        function addSchedule() {
+            let date = document.getElementById("scheduleDate").value;
+            let task = document.getElementById("scheduleTask").value;
+            if(date && task) {
+                let div = document.createElement("div");
+                div.innerText = date + " - " + task;
+                document.getElementById("scheduleList").appendChild(div);
+                document.getElementById("scheduleTask").value = "";
+            }
+        }
+    </script>
+</body>
+</html>
